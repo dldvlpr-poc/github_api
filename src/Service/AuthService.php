@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service;
 
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
@@ -58,5 +59,9 @@ class AuthService
     {
         return $session->has('user');
     }
-}
 
+    public function logout(SessionInterface $session): void
+    {
+        $session->remove('user');
+    }
+}

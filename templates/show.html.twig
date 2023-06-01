@@ -1,12 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Profil GitHub de {{ user.name }}{% endblock %}
 
 {% block body %}
+    <div>
+        <nav>
+            <ul>
+                <li><a href=#>Accueil</a></li>
+                <li><a href=# >Profil</a></li>
+                <li><a href="{{ path('github_repos') }}">Repositories</a></li>
+            </ul>
+        </nav>
 
-    <div class="github_login container">
-        <p>{{ login }}</p>
-        <img src="{{ picture }}">
     </div>
-
+    <div class="container">
+        <h1>Profil GitHub de {{ user.name }}</h1>
+        <p>Email : {{ user.email }}</p>
+        <p>URL du profil : {{ user.html_url }}</p>
+    </div>
 {% endblock %}

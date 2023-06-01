@@ -1,15 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {% block body %}
-
-    <div class="github_login container">
-        {% if login %}
-            <p>Connected as {{ login }}</p>
-            <img src="{{ picture }}" alt="User picture">
+    <div class="container">
+        <h1>Bienvenue sur notre application GitHub</h1>
+        {% if user %}
+            <p>Bonjour, {{ user.name }} !</p>
         {% else %}
-            <a href="{{ loginUrl }}">Sign-in with GitHub</a>
+            <p>Vous n'êtes pas connecté. <a href="{{ loginUrl }}">Se connecter avec GitHub</a></p>
         {% endif %}
     </div>
 

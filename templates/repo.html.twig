@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Repositories{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Vos Repositories</h1>
+        {% for repo in allRepo %}
+            <div>
+                <h2>{{ repo.name }}</h2>
+                <p>{{ repo.description }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
