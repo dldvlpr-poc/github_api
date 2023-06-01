@@ -14,7 +14,7 @@
         {% endblock %}
     </head>
     <body>
-    {% if user %}
+    {% if user is defined and user %}
         <a href="{{ path('logout') }}">Se déconnecter</a>
     {% endif %}
 

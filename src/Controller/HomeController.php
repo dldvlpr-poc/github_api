@@ -4,20 +4,20 @@ namespace App\Controller;
 
 use App\Service\AuthService;
 use App\Service\GithubService;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class HomeController extends AbstractController
 {
     private AuthService $authService;
-    private GithubService $githubService;
 
-    public function __construct(AuthService $authService, GithubService $githubService)
+    public function __construct(AuthService $authService)
     {
         $this->authService = $authService;
-        $this->githubService = $githubService;
     }
 
     #[Route('/', name: 'app_home')]
@@ -43,6 +43,9 @@ class HomeController extends AbstractController
         return $this->redirect($this->authService->getGithubLoginUrl());
     }
 
+    /**
+     * @throws IdentityProviderException
+     */
     #[Route('/github-callback', name: 'github_callback')]
     public function githubCallback(Request $request): Response
     {
@@ -59,29 +62,20 @@ class HomeController extends AbstractController
         ]);
     }
 
+
     #[Route('/github-repos', name: 'github_repos')]
-    public function githubRepo(Request $request): Response
+    public function githubRepo(Request $request, GithubService $githubService, HttpClientInterface $httpClient): Response
     {
-        $user = $this->authService->getUser($request->getSession());
-        $this->githubService->authenticate($user['access_token']);
+        $session = $request->getSession();
+        $repos = $githubService->fetchGitHubInformation($session, $httpClient);
 
-        $repositories = $this->githubService->getAllRepositories();
 
+        //Retournez une réponse appropriée
         return $this->render('repo.html.twig', [
-            'allRepo' => $repositories,
+            'allRepo' => $repos,
         ]);
     }
 
-
-    #[Route('/github-user-repos/{username}', name: 'github_user_repos')]
-    public function userRepositories($username): Response
-    {
-        $this->githubService->authenticate('your-access-token');
-
-        $repositories = $this->githubService->getUserRepositories($username);
-
-        return $this->render('github/user_repositories.html.twig', ['repositories' => $repositories]);
-    }
 
     #[Route('/logout', name: 'logout')]
     public function logout(Request $request): Response
