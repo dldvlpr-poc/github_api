@@ -12,6 +12,15 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class GithubService
 {
+    private httpClientInterface $httpClient;
+
+    public function __construct(httpClientInterface $httpClient)
+    {
+        $this->httpClient = $httpClient;
+    }
+
+    // Méthode pour récupérer les informations GitHub de l'utilisateur
+
     /**
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
@@ -19,9 +28,7 @@ class GithubService
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-
-    // Méthode pour récupérer les informations GitHub de l'utilisateur
-    public function fetchGitHubInformation(SessionInterface $session, HttpClientInterface $httpClient): array
+    public function fetchGitHubInformation(SessionInterface $session): array
     {
         // Récupère le token d'accès de l'utilisateur stocké dans la session
         $token = $session->get('user')['access_token'];
@@ -37,7 +44,7 @@ class GithubService
         $url = 'https://api.github.com/user/repos';
 
         // Fait une requête GET à l'API GitHub
-        $response = $httpClient->request('GET', $url, [
+        $response = $this->httpClient->request('GET', $url, [
             'headers' => $headers
         ]);
 

@@ -64,10 +64,10 @@ class HomeController extends AbstractController
 
 
     #[Route('/github-repos', name: 'github_repos')]
-    public function githubRepo(Request $request, GithubService $githubService, HttpClientInterface $httpClient): Response
+    public function githubRepo(Request $request, GithubService $githubService): Response
     {
         $session = $request->getSession();
-        $repos = $githubService->fetchGitHubInformation($session, $httpClient);
+        $repos = $githubService->fetchGitHubInformation($session);
 
 
         //Retournez une réponse appropriée
